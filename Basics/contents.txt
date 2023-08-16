@@ -1,0 +1,46 @@
+1)print greet message
+2)Program to Print Message
+3) Program to Print Data from Variables
+4)Program to Add 2 values
+5)Program to Demo Character input
+6)Program to Demo Input
+7) Program to Print Big No
+8)Program to Print 1-10
+9)program to demo dowhile
+10) Program to Demo Switch-case.
+
+Arrays
+--------
+11)Program to Store and Display sum of  values of an Array
+12)Program to Demo Command Line Arguments
+
+Classes ,Objects and Methods
+-----------------------------------
+1) Program to Demo Employee Class .
+2)Program to Demo Person Class.
+3)Program to Demo Student Class with Constructors.
+
+Strings
+--------
+1)Program to Demo String in different ways.
+2)Program to Demo concat(),length(),replace(),toUppercase(),toLowerCase,substring(),equals()
+3) Program to Demo StringBuffer class
+4) Program to Demo Pallandrome Testing.
+
+Inheritence
+---------------
+1)Program to Demo Inheritance 
+2)Program to Demo Inheritance with super keyword.
+3) Program on super keyword
+4)Program to Demo Inheritance with Student data
+5) Program to Demo Inheritance with Employee data
+6)Program to Demo Inheritance with caliculating Area of different shapes and using constructors with super keyword
+7)Program to Demo Static Polymorphism with addition of 2,3 values and strings
+
+Abstract classes
+--------------------
+1)Program to Demo Abstract class with caliculating Area of different shapes and using constructors with super keyword
+
+Packages
+-----------
+// Program to create a Package with Addition,Subtraction,Multiplication,Division
