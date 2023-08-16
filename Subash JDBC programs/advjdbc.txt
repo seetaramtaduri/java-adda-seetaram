@@ -1,0 +1,340 @@
+
+					JDBC 1.0/2.0/3.0
+					----------------
+
+JDBC 1.0 API
+------------
+
+  JDBC : Java Database connectivity
+  ODBC : Open Database Connectivity
+
+  Java Applications => Drivers => Driver Manager=> Data Source
+
+J2SE & J2EE includes  the packages java.sql and javax.sql which contains
+all classes requred for a java program that access database by means of JDBC.
+
+  Types of JDBC drivers:
+  =====================
+
+Type 1: jdbc:odbc bridge driver
+Type 2: Native API java driver
+Type 3: jdbc net pure java driver
+Type 4: Native protocol pure java driver
+
+Jdbc Odbc bridge driver allows java programs to work with a DB using widely 
+available ODBC drivers. Drawback of ODBC is slow and must be installed on 
+each user machine.
+
+
+Navative API java driver work in conjunction with the non java native drivers 
+provided by DB vendor that are installed on client machine.
+
+Pure java network driver (JDBC net driver) consists 2 parts. The first part
+is the client portion which perform a DBMS independent SQL call and second
+part is the SQL call itself which is then translated to a specific protocol 
+according to the middleware vendor.
+
+
+API contains classes, packages and java drivers
+
+  => With JDK, JDBC drivers are automatically installed & no
+     special configuration is required
+
+   Establishing Connection :
+   -----------------------
+
+   Class.forName("sun.jdbc.odbc.JdbcOdbcDriver");
+   Class.forName("jdbc.yourdriver");
+	eg. Class.forName("oracle.jdb.driver.OracleDriver");
+		con=DriverManager.getConnection("jdbc:oracle:oci:scott/tiger@");
+
+   Making Connection:
+   -----------------
+ try{
+   Connection con =
+       DriverManager.getConnection(url,uid,pwd);
+
+    .getConnection("Jdbc:Odbc:murthydsn","scott","tiger")
+
+
+Statements in JDBC API
+
+	1. Statement
+	2. PreparedStatement (work with placeholders)
+	3. CallableStatement.
+
+Recordsets in JDBC
+	
+	1. ResultSet
+	2. Rowset
+	3. CachedRowSet
+
+DatabaseMetadata and ResultSetmetaData classes allows to access data dictionery
+of  database like database name, version, table names, columns, col. types, rows count etc
+
+Statement s = con.createStatement();
+String str="select * from products " +
+              "where orddate>'12-jan-99'"+
+              "order by price "
+Resultset rs  = s.executeQuery("select * from emp where sal>1000 ");
+       while (rs.next())
+       {
+d        sop(rs.getString(1));
+        sop(rs.getFloat(2));
+        sop(rs.getInt(3));
+        sop(rs.getDate(4);
+     }
+       rs.close();
+       con.close();
+    }catch(Exception e){}
+
+
+Database Error processing
+-------------------------
+Retrive original database error code by calling the SQlException's getErrorCode method and
+Error text by calling getMessage() method.
+ 
+ try              
+  {
+    Class.forName("sun.jdbc.odbc.JdbcOdbcDriver");
+    Connection con  = ........
+  }catch(ClassNotFoundException e)
+  {Sop(e); }
+
+  try
+  {
+    statement ...
+    extuteupdate....
+    
+  } catch (SQLException ex)
+   {
+      sop(ex.getMessage());
+      sop(ex.getErrorCode());
+   }
+
+
+Realtime Example of JDBC:
+------------------------
+Creating Collections of Airusers
+
+
+Class AirUser{
+	private String name;
+	private int flightno;
+
+	public void setname(String name) {this.name=name; }
+	public String getname() {return name);
+	public void setflightno(int flightno) {this.flightno=flightno ; }
+	public int getflightno() {return flightno;} 
+
+      }
+
+class users {
+	
+	.....	
+	..... establich connection to database and obtain statement and resultset object
+	Vector airusers= new Vector();
+	while (rs.next() )
+	{
+	  AirUser currentuser = new AirUser();
+	  currentuser.setname(rs.getString(1) );
+	  currentuser.setflightno(rs.getInt(2) );
+	  airusers.add(currentuser);
+	}
+	  
+	
+
+
+JDBC 2.0 API: application Program interface
+------------
+Features :
+
+ 1. Scroll forward/backward in resultset or
+    move to specific row.
+
+ 2. Make updates to DB  tables using  java
+    programming language. instead of
+    SQL commands.
+
+ 3. Send multiple sql statements to db as unit.
+
+ 4. Use the new SQL3 Datatypes (BLOB, CLOB)
+
+ MOVING CURSOR IN SCROLLABLE RESULTSET :
+ =====================================
+
+TYPE_FORWARD_ONLY : Scroll forwad only
+CONCUR_READ_ONLY  : makes the result set read only
+CONCUR_UPDATABLW  : makes the result set updatable
+TYPE_SCROLL_SENSITIVE : whether scrolling should reflect the changes that
+		 	might have been made to the resultsetdata
+TYPE_SCROLL_INSENSITIVE
+
+
+ Statement s =
+    con.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE,
+                        ResultSet.CONCUR_READ_ONLY);
+
+        (you can say ..,. Resultset.CONCUR_UPDATABLE)
+        (you can say .... Resultset.FORWORD_ONLY)
+        (you can say .. ResultSet.TYPE_SCROLL_INSENSITIVE,
+                 
+ statement s= con.createStatement(....);
+ Resultset rs = s.executeQuery("select * from dept");
+ rs.previous();
+ rs.next();
+ rs.last();
+ rs.first();
+ rs.beforeFirst();
+ rs.afterLast();
+ rs.absolute(3);
+ rs.relative(2); rs.relative(-2)
+ rs.isBeforeFirst();
+ rs.isAfterLast();
+ rs.getRow(); // will return row no
+
+       if (!isAfterLast())
+           rs.afterLast();
+
+  e.g.
+         rs.afterlast();
+         while(rs.previous())
+           {
+             rs.getInt(1);
+             rs.getString(2);
+           }
+
+ Insert/update/delete
+ ====================
+
+ Insert:
+
+ rs.moveToInstertRow();
+ rs.updateInt("deptno",60);
+ rs.updateString("dname","adm");
+ rs.updateRow();   //commit
+
+ Update :
+
+    rs.absolute(3);
+    rs.updateString("dname","prd");
+    rs.UpdateRow();
+
+ Delete:
+     rs.absolute(4);
+     rs.deleteRow();
+
+ Transactions : JTM:
+
+     con.setAutoCommit(false);
+     con.commit();
+     con.rollback();
+
+ Batch Updates :
+
+      addBatch();
+      removeBatch();
+      executeBatch();
+
+
+   con.setAutocommit(false);
+   rs.addBatch("insert into dept values(10,'sales')");
+   rs.addBatch("insert into dept values(20,'adm')");
+   ........
+   int x[] = rs.executeBatch();
+       sop("no.of rows inserted="+x);
+
+BatchUpdate.java
+================
+
+import java.sql.*;
+public class batchupdate
+{
+
+ public static void main(String str[])
+ {
+   String url="jdbc:odbc:javadsn";
+   Connection con;
+   Statement st;
+   try
+   {
+    Class.forName("sun.jdbc.JdbcOdbcDriver");
+   }catch(ClassNotFoundExcception ce)
+   {  System.err.print("no such class");
+      System.err.print(ce.getMessage());
+   }
+   try
+   {
+    con = DriverManager.getConnection (
+        url,"scott","tiger");
+    st=con.createStatment(ResultSet.TYPE_SCOROLL_
+                  SENSITIVE,
+                 ResultSet.CONCUR_UPDATABLE);
+    con.setAutoCommit(false);
+
+    st.addBatch("insert into dept"+
+         "values(10,'sales','hyd');
+
+    st.addBatch("insert into dept"+
+         "values(20,'adm','hyd');
+        .....
+
+    int[] updatecnt=st.executeBatch();
+    con.commit();
+    ResultSet rs=st.executequery("select * from dept");
+    sop("after insertion");
+    while(rs.next())
+    {
+      sop(rs.getInt(1));
+      sop(rs.getString(2);
+      
+    }
+     rs.close();
+     con.close();
+     st.close();
+   }catch(BatchUpdateException b)
+   {
+    sop(b);
+    sop("sql state"+b.getSQLState());
+   }
+
+   catch(SQLException s)
+   {
+    sop(s.getMessage());
+    sop(s.getErrorCode());
+    sop(s.getSQLState())
+   }
+ }
+}
+
+JDBC 3.0 API
+------------
+	- Supports savepoints creation
+	- supports new resultet called RowSet
+	- Supoorts CachedRowSet
+	- Connection pooling
+
+USING SAVEPOINTS
+----------------
+	Savepoint is a marker within a transaction that allows you to rollback a part
+	 of the transaction. 
+	java.sql.SavePoint interface enables you to set savepoints via 
+	Connection .setSavePoint()
+
+	con.setAutoCommit(false);
+	Statement s = con.createStatement();
+	s.executeUpdate("insert into dept values (10,'sales','hyd')");
+	Savepoint s= con.setSavePoint("one");
+	try {
+	s.executeUpdate("insert into dept values (20,'prd','pune')" );
+	}catch(Exception e) {
+		System.out.println("rolling back first transaction");
+		con.rollback(one);
+	}
+	con.commit();
+
+
+
+
+	
+	
